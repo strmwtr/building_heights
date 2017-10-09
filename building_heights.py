@@ -36,9 +36,9 @@ def elevation_data(in_feature, in_raster):
     arcpy.AddSurfaceInformation_3d(in_feature, in_raster, 'Z')
 
 def footprint_elevation(footprint, elevation_points, out_location, unique_id):
-    arcpy.Intersect_analysis([footprint, elevation_points], out_location+'\\footprint_points.shp')
-    arcpy.Statistics_analysis(out_location+'\\footprint_points.shp', out_location+'\\Ground_Stats', [['Z','MEAN']],
-    unique_id)
+    arcpy.Intersect_analysis([footprint, elevation_points], out_location+'\\elev_points.shp')
+    #arcpy.Statistics_analysis(out_location+'\\footprint_points.shp', out_location+'\\Ground_Stats', [['Z','MEAN']],
+    #unique_id)
 
 def create_building_heights_feature(in_feature_1, in_feature_2, unique_id, out_location):
     arcpy.JoinField_management(in_feature_1, unique_id, in_feature_2, unique_id)
