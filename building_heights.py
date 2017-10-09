@@ -29,7 +29,7 @@ def random_points(feature, out_location):
     arcpy.AddField_management(temp, 'Num_Points', 'LONG')
     arcpy.CalculateField_management(temp, 'Num_Points', 
     '[Shape_Area]*0.1', 'VB')
-    arcpy.CreateRandomPoints_management(output_dir,'Ran_Points.shp', temp,
+    arcpy.CreateRandomPoints_management(output_location,'Ran_Points.shp', temp,
     number_of_points_or_field='Num_Points')
 
 def elevation_data(in_feature, in_raster):
