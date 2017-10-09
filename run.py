@@ -12,3 +12,5 @@ struc = r'Database Connections\Connection to GISPRDDB direct connect.sde\cvgis.C
 
 #bh.random_points(struc, dir_path)
 #bh.elevation_data(dir_path + r'\Ran_Points.shp', delta)
+bh.footprint_elevation(dir_path + r'\temp.shp', dir_path + r'Ran_Points', 
+  dir_path, 'BIN')
