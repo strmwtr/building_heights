@@ -4,12 +4,6 @@ import arcpy
 arcpy.CheckOutExtension('Spatial')
 arcpy.CheckOutExtension('3D')
 
-last_return_raster = r'C:\Users\brownr\Desktop\building_heights_data\source_raster\last_return'
-ground_return_raster = r'C:\Users\brownr\Desktop\building_heights_data\source_raster\ground_return'
-building_footprints = r'C:\Users\brownr\Desktop\building_heights_data\building_heights.gdb\buildings'
-output_dir = r'C:\Users\brownr\Desktop\building_heights_data\outputs3'
-prj = r'\\metanoia\geodata\PW\sw_tech\Coordinate_Systems\NAD 1983 StatePlane Virginia South FIPS 4502 (US Feet).prj'    
-
 def delta_raster(in_raster_1, in_raster_2):
     ''' Equivalent to Raster Calculator expression "in_raster_1 - in_raster_2
 
@@ -51,13 +45,6 @@ def create_building_heights_feature(in_feature_1, in_feature_2, unique_id, out_l
 
     arcpy.FeatureClassToFeatureClass_conversion (in_feature_1, out_location,
     'Building_Heights.shp')
-
-
-delta_raster(last_return_raster,ground_return_raster)
-random_points(building_footprints, output_dir)
-elevation_data(output_dir+'\\Ran_Points.shp', output_dir+'\\delta_raster')
-footprint_elevation(building_footprints, output_dir+'\\Ran_Points.shp', output_dir, 'BIN')
-create_building_heights_feature(output_dir+'\\temp.shp', output_dir+'\\ground_stats', 'BIN', output_dir)
 
 # Returns licenses
 arcpy.CheckInExtension('Spatial')
