@@ -24,27 +24,29 @@ def proj_rast(in_raster, out_raster, prj):
     arcpy.ProjectRaster_management(in_raster, out_raster, prj)
 
 def random_points(feature, out_location):
-    temp = out_location + '\\temp.shp'
-    arcpy.CopyFeatures_management(feature, temp)
-    arcpy.AddField_management(temp, 'Num_Points', 'LONG')
-    arcpy.CalculateField_management(temp, 'Num_Points', 
+    arcpy.AddField_management(feature, 'Num_Points', 'LONG')
+    arcpy.CalculateField_management(feature, 'Num_Points', 
     '[Shape_Area]*0.1', 'VB')
-    arcpy.CreateRandomPoints_management(out_location,'Ran_Points.shp', temp,
+    arcpy.CreateRandomPoints_management(out_location, 'random_points', feature,
     number_of_points_or_field='Num_Points')
 
 def elevation_data(in_feature, in_raster):
     arcpy.AddSurfaceInformation_3d(in_feature, in_raster, 'Z')
 
 def footprint_elevation(footprint, elevation_points, out_location, unique_id):
-    arcpy.Intersect_analysis([footprint, elevation_points], out_location+'\\elev_points.shp')
-    #arcpy.Statistics_analysis(out_location+'\\footprint_points.shp', out_location+'\\Ground_Stats', [['Z','MEAN']],
-    #unique_id)
+    arcpy.Intersect_analysis([footprint, elevation_points], 'elevation_points')
+    arcpy.Statistics_analysis('elevation_points', 'stats', [['Z','MEAN']],
+    unique_id)
 
-def create_building_heights_feature(in_feature_1, in_feature_2, unique_id, out_location):
-    arcpy.JoinField_management(in_feature_1, unique_id, in_feature_2, unique_id)
+def create_building_heights_feature(in_feat_1, in_feat_2, unique_id, out_location):
+    arcpy.JoinField_management(in_feat_1, unique_id, in_feat_2, unique_id)
 
-    arcpy.FeatureClassToFeatureClass_conversion (in_feature_1, out_location,
-    'Building_Heights.shp')
+    arcpy.FeatureClassToFeatureClass_conversion (in_feat_1, out_location,
+    'Building_Heights')
+
+    arcpy.AddField_management('Building_Heights', 'Height', 'SHORT')
+    arcpy.CalculateField_management('Building_Heights', 'Height', 
+    '[MEAN_Z]', 'VB')
 
 # Returns licenses
 arcpy.CheckInExtension('Spatial')

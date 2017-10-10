@@ -12,18 +12,23 @@ struc = r'Database Connections\Connection to GISPRDDB direct connect.sde\cvgis.C
 
 #Create gdb to hold data
 gdb = dir_path + r'\Building_Heights.gdb'
-arcpy.CreateFileGDB_management(dir_path, 'Building_Heights.gdb')
+#arcpy.CreateFileGDB_management(dir_path, 'Building_Heights.gdb')
 #Set gdb as workspace
 arcpy.env.workspace = gdb
+arcpy.env.overwriteOutput = True
+
+#Copy footprints to new gdb
+#arcpy.CopyFeatures_management(struc, 'footprint')
 
 #Create random points layer
-bh.random_points(struc, 'random_points')
+#bh.random_points('footprint', gdb)
 #Add elevation data to random points layer
-bh.elevation_data('random_points', delta)
-#Interset random_points layer with footprints 
-bh.footprint_elevation('structure', 'random_points', 
-  gdb, 'BIN')
-
+#bh.elevation_data('random_points', delta)
+#Intersect random_points layer with footprints 
+#bh.footprint_elevation('footprint', 'random_points', gdb, 'BIN')
+#Join footprints to stats and create building_heights
+bh.create_building_heights_feature('footprint', 'stats', 'BIN', 
+  gdb)
 
 # Returns licenses
 arcpy.CheckInExtension('Spatial')
