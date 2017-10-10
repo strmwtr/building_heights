@@ -4,25 +4,28 @@ import arcpy
 arcpy.CheckOutExtension('Spatial')
 arcpy.CheckOutExtension('3D')
 
-def delta_raster(in_raster_1, in_raster_2):
+def delta_raster(in_raster_1, in_raster_2, output_dir):
     ''' Equivalent to Raster Calculator expression "in_raster_1 - in_raster_2
 
         Subtracts in_raster_1 from in_raster_2 and stores output at 
         output_dir\delta_raster
     '''
     delta_raster = arcpy.sa.Minus(in_raster_1, in_raster_2)
-    delta_raster.save(output_dir + '\\delta_raster')
+    delta_raster.save(output_dir + r'\delta')
     return delta_raster
 
-def fill(in_raster):
+def fill(in_raster, output_dir):
     ''' Fills raster '''
     filled_raster = arcpy.sa.Fill(in_raster)
-    return filled_raster
+    filled_raster.save(output_dir + r'\delta_raster')
 
-def proj_rast(in_raster, out_raster, prj):
+def proj_rast(in_raster, output_dir, in_feat):
     ''' Projects raster '''
-    arcpy.ProjectRaster_management(in_raster, out_raster, prj)
-
+    temp = output_dir + r'\temp.shp'
+    prj = output_dir + r'\temp.prj'
+    arcpy.CopyFeatures_management(in_feat, temp)
+    arcpy.ProjectRaster_management(in_raster, in_raster + '_p', prj)
+    
 def random_points(feature, out_location):
     arcpy.AddField_management(feature, 'Num_Points', 'LONG')
     arcpy.CalculateField_management(feature, 'Num_Points', 
